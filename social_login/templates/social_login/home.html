@@ -1,0 +1,21 @@
+<!-- FILEPATH: /Users/hyeslim/HYESEO/user-management/login/templates/login/home.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+</head>
+<body>
+	<h1>Welcome to 42tsc_Test</h1>
+	{% load socialaccount %}
+	{% providers_media_js %}
+	{% comment %} <a href="accounts/signup/">Sign up</a><br> {% endcomment %}
+	{% comment %} <a href="{% provider_login_url 'google' %}">Login with Google</a><br> {% endcomment %}
+	{% if user.is_authenticated %}
+		<p>Hi {{ user.nickname }}!</p>
+		<a href="accounts/logout/">Logout</a>
+	{% else %}
+		<a href="{% provider_login_url 'google' %}">Google Login</a><br>
+	{% endif %}
+</body>
+</html>
