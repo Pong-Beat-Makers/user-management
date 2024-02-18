@@ -1,12 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from allauth.socialaccount.models import SocialAccount
 
 
 class CreateUser(BaseUserManager):
     def create_user(self, email, nickname, **kwargs):
-        # if not email:
-        #     raise ValueError('Please write your email')
         if not nickname:
             raise ValueError('Please write your nickname')
         user = self.model(
@@ -29,7 +26,6 @@ class CreateUser(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    # username = models.CharField(max_length=15, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -45,11 +41,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     lose = models.IntegerField(default=0)
     rank = models.IntegerField(default=0)
     profile = models.CharField(default='', max_length=255)
-    # profile = models.ImageField(upload_to='', blank=True, null=True)
-    # 사용자의 username field를 username이 아닌 email로 변경(username이 아니라 이메일로 로그인)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', ]
-    # BaseUsermanger를 상속 받은 커스텀 헬퍼 클래스로 유저를 생성.
     objects = CreateUser()
 
     def __str__(self):

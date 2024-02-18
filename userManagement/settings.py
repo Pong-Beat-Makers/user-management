@@ -12,62 +12,15 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-"""
-# secrets.json에서 CLIENT_ID, SECRET 가져오기.
-
-import json
-import sys
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# secrets.json 파일을 찾아줍니다.
-SECRET_BASE_FILE = os.path.join(BASE_DIR, 'secrets.json')
-
-# secrets.json 파일을 읽고, json key/value 값들을 secrets에 할당합니다.
-secrets = json.load(open(SECRET_BASE_FILE))
-
-# setattr을 이용해 key 값은 변수명, value 값은 값으로 각 변수에 할당합니다.
-for key, value in secrets.items():
-    setattr(sys.modules[__name__], key, value)
-
-SECRET_KEY = secrets.get('SECRET_KEY')
-CLIENT_ID = secrets.get('GOOGLE_CLIENT_ID')
-SECRET = secrets.get('GOOGLE_SECRET')
-SOCIALACCOUNT_PROVIDERS = secrets.get('SOCIALACCOUNT_PROVIDERS')
-"""
-
-# '''
-# environ에서 CLIENT_ID, SECRET 가져오기
-CLIENT_ID = os.environ.get('CLIENT_ID')
-SECRET = os.environ.get('SECRET')
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': CLIENT_ID, #"821755916701-a6hungk59o6rs0klh77ltvbk2bpkvjjm.apps.googleusercontent.com",
-            'secret': SECRET, #"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",
-            'key': ''
-        },
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)f=so358_w=@++&8hwm269c(ksi(-=x*dbvs+ym7)s)x%omdfk'
-# '''
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -76,20 +29,13 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'social_login.User'
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
-
 
 # Application definition
 
@@ -100,18 +46,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
-    # Django allauth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-
-    # Providers
-    'allauth.socialaccount.providers.google',
-
+    # Django REST framework
+    'rest_framework',
+    'rest_framework.authtoken',
+    # JWT
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     # 'social_login',
     'social_login.apps.SocialLoginConfig',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # Email settings
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -124,7 +73,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'userManagement.urls'
@@ -147,7 +95,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'userManagement.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -157,7 +104,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -187,7 +133,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
