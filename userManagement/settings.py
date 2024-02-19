@@ -52,8 +52,10 @@ INSTALLED_APPS = [
     # JWT
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    # 'social_login',
+    # 'social_login'
     'social_login.apps.SocialLoginConfig',
+    # 'user_api'
+    'user_api.apps.UserApiConfig'
 ]
 
 REST_FRAMEWORK = {
