@@ -55,8 +55,9 @@ def generate_random_string(length):
 class SocialLogin(APIView):
     def get(self, request):
         set_env(request)
-        return redirect(LOGIN_URL)
-
+        return Response({
+            'login_url': LOGIN_URL
+        }, status=status.HTTP_200_OK)
 
 class SocialLoginCallBack(APIView):
     def get(self, request):
