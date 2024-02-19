@@ -20,6 +20,7 @@ python manage.py runserver
 ## 구글 로그인
 ***
 ### 접속
+#### http method : GET
 #### path: /accounts/google/login/
 ***
 ### 응답예시
@@ -70,6 +71,7 @@ python manage.py runserver
 ## 42 로그인
 ***
 ### 접속
+#### http method : GET
 #### path: /accounts/42intra/login/
 ***
 ### 응답예시
