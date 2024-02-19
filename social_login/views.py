@@ -51,9 +51,6 @@ def generate_random_string(length):
 
 
 # Create your views here.
-def login(request):
-    return render(request, 'social_login/home.html')
-
 
 class SocialLogin(APIView):
     def get(self, request):
