@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     # 'social_login'
     'social_login.apps.SocialLoginConfig',
     # 'user_api'
-    'user_api.apps.UserApiConfig'
+    'user_api.apps.UserApiConfig',
+    # CORS 설정
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -70,6 +72,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware', # cors middleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -145,3 +148,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# cors 설정
+CORS_ALLOW_ALL_ORIGINS = True
+
+# TODO : 배포 시 수정
+# CORS_ALLOWED_ORIGINS = [
+#     "https://example.com",
+#     "https://sub.example.com",
+#     "http://localhost:8080",
+#     "http://127.0.0.1:9000",
+# ]
