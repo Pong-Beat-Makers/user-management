@@ -54,6 +54,7 @@ def generate_random_string(length):
 # Create your views here.
 
 class SocialLogin(APIView):
+    permission_classes = ['AllowAny']
     def get(self, request):
         set_env(request)
         return Response({
