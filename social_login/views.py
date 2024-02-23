@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.http import HttpResponseRedirect
 import requests
 from .models import User
 import os
@@ -54,7 +55,6 @@ def generate_random_string(length):
 # Create your views here.
 
 class SocialLogin(APIView):
-    permission_classes = [Al]
     def get(self, request):
         set_env(request)
         return Response({
@@ -86,7 +86,10 @@ class SocialLoginCallBack(APIView):
         refresh_token = RefreshToken.for_user(user)
         access_token = refresh_token.access_token
 
-        return redirect(FE_URL).set_cookie('refresh_token', str(refresh_token), httponly=True).set_cookie('access_token', str(access_token), httponly=True)
+        response = HttpResponseRedirect(FE_URL)
+        response.set_cookie('access_token', str(access_token), httponly=True)
+        response.set_cookie('refresh_token', str(refresh_token), httponly=True)
+        return response
     def get_user_info(self, access_token):
         response = requests.get(USER_INFO_URL + f'?access_token={access_token}')
         if response.status_code == 200:
