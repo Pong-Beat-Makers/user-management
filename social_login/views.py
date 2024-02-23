@@ -87,8 +87,8 @@ class SocialLoginCallBack(APIView):
         access_token = refresh_token.access_token
 
         response = HttpResponseRedirect(FE_URL)
-        response.set_cookie('access_token', str(access_token), httponly=True)
-        response.set_cookie('refresh_token', str(refresh_token), httponly=True)
+        response.set_cookie('access_token', str(access_token))
+        response.set_cookie('refresh_token', str(refresh_token))
         return response
     def get_user_info(self, access_token):
         response = requests.get(USER_INFO_URL + f'?access_token={access_token}')
