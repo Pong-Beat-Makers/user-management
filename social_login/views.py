@@ -12,12 +12,13 @@ import os
 import random
 import string
 
-LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET = None, None, None, None, None, None
+LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL = None, None, None, None, None, None, None
 
 
 def set_env(request):
-    global LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
+    global LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL
     path = request.path
+    FE_URL = os.environ.get('FE_URL')
     if 'google' in path:
         LOGIN_URL = (
                 'https://accounts.google.com/o/oauth2/v2/auth' +
@@ -83,7 +84,7 @@ class SocialLoginCallBack(APIView):
         refresh_token = RefreshToken.for_user(user)
         access_token = refresh_token.access_token
 
-        redirect('http://127.0.0.1:5501').set_cookie('refresh_token', refresh_token).set_cookie('access_token', access_token)
+        return redirect(FE_URL).set_cookie('refresh_token', refresh_token).set_cookie('access_token', access_token)
     def get_user_info(self, access_token):
         response = requests.get(USER_INFO_URL + f'?access_token={access_token}')
         if response.status_code == 200:
