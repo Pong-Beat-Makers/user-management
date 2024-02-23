@@ -83,17 +83,7 @@ class SocialLoginCallBack(APIView):
         refresh_token = RefreshToken.for_user(user)
         access_token = refresh_token.access_token
 
-        res = Response({
-            'user': email,
-            'message': 'Logged in successfully',
-            'refresh_token': str(refresh_token),
-            'access_token': str(access_token),
-        }, status=status.HTTP_200_OK)
-
-        res.set_cookie('access_token', str(access_token), httponly=True)
-        res.set_cookie('refresh_token', str(refresh_token), httponly=True)
-
-        return res
+        redirect('http://127.0.0.1:5501').set_cookie('refresh_token', refresh_token).set_cookie('access_token', access_token)
     def get_user_info(self, access_token):
         response = requests.get(USER_INFO_URL + f'?access_token={access_token}')
         if response.status_code == 200:
