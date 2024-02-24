@@ -1,19 +1,13 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import HttpResponseRedirect
-import requests
-from .models import User
-import os
+from . import models
+import requests, os
 
-# 랜덤 스트링
-import random
-import string
-
-LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL = None, None, None, None, None, None, None
+LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL = \
+    None, None, None, None, None, None, None
 
 
 def set_env(request):
@@ -47,12 +41,11 @@ def set_env(request):
         CLIENT_SECRET = os.environ.get('INTRA_SECRET')
 
 
-def generate_random_string(length):
-    letters = string.ascii_letters
-    return ''.join(random.choice(letters) for _ in range(length))
+def generate_new_nickname():
+    last_record = models.User.objects.last()
+    last_id = last_record.id if last_record else None
+    return f'User{last_id + 1}' if last_id else 'User1'
 
-
-# Create your views here.
 
 class SocialLogin(APIView):
     def get(self, request):
@@ -78,10 +71,10 @@ class SocialLoginCallBack(APIView):
 
         user_info = self.get_user_info(access_token)
         email = user_info.get('email')
-        user = User.objects.filter(email=email).first()
+        user = models.User.objects.filter(email=email).first()
 
         if not user:
-            user = User.objects.create_user(email=email, nickname=generate_random_string(10))
+            user = models.User.objects.create_user(email=email, nickname=generate_new_nickname())
 
         refresh_token = RefreshToken.for_user(user)
         access_token = refresh_token.access_token
@@ -90,6 +83,7 @@ class SocialLoginCallBack(APIView):
         response.set_cookie('access_token', str(access_token))
         response.set_cookie('refresh_token', str(refresh_token))
         return response
+
     def get_user_info(self, access_token):
         response = requests.get(USER_INFO_URL + f'?access_token={access_token}')
         if response.status_code == 200:

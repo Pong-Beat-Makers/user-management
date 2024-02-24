@@ -52,10 +52,13 @@ INSTALLED_APPS = [
     # JWT
     'rest_framework_simplejwt',
     # 'rest_framework_simplejwt.token_blacklist',
+
+    # 'friends'
+    'friends.apps.FriendsConfig',
     # 'social_login'
     'social_login.apps.SocialLoginConfig',
-    # 'user_api'
-    'user_api.apps.UserApiConfig',
+    # 'user_profile'
+    'user_profile.apps.UserProfileConfig',
     # CORS 설정
     'corsheaders',
 ]
