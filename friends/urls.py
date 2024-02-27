@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
+# localhost:8000/friends/
 urlpatterns = [
-    path('add/', views.FriendshipView.as_view(), name='add_friend'),
-    path('delete/', views.FriendshipView.as_view(), name='delete_friend'),
+    path('', views.FriendshipView.as_view(), name='friend'),
 ]

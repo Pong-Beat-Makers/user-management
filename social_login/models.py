@@ -40,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     win = models.IntegerField(default=0)
     lose = models.IntegerField(default=0)
     rank = models.IntegerField(default=0)
-    profile = models.CharField(default='', max_length=255)
+    profile = models.CharField(default='default', max_length=255)
     status_message = models.CharField(default='', max_length=50, null=False, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', ]

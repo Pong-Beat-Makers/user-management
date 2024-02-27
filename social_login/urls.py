@@ -1,6 +1,7 @@
 from django.urls import path, include
 from . import views
 
+# localhost:8000/accounts/
 urlpatterns = [
 	path('google/login/', views.SocialLogin.as_view(), name='google_login'),
 	path('42intra/login/', views.SocialLogin.as_view(), name='42intra_login'),
