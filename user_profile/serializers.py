@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from social_login.serializers import UserSerializer
 from social_login.models import User
+from friends.models import Friendship
 
 
 class ProfileSerializer(UserSerializer):
@@ -12,18 +13,32 @@ class ProfileSerializer(UserSerializer):
         model = User
         fields = ['profile_to', 'nickname_to', 'status_message_to']
 
+    def get_user_info(self, user, friend):
+        is_friend = Friendship.objects.filter(user=user, friend=friend).exists()
+        info = {
+            'nickname': friend.nickname,
+            'profile': friend.profile,
+            'status_message': friend.status_message,
+            'win': friend.win,
+            'lose': friend.lose,
+            'rank': friend.rank,
+            'is_friend': is_friend  # 자기 자신을 조회할 경우 프론트에서 사용되지 않으므로 False여도 상관 없음
+        }
+        return info
+
     def update(self, user, validated_data):
         fields = ['profile', 'nickname', 'status_message']
         for field in fields:
             value = validated_data.get(field, getattr(user, field))
             if value != getattr(user, field):
                 if field == 'nickname':
-                    value = self.check_nickname(value)
+                    value = check_nickname(value)
                 setattr(user, field, value)
         user.save()
         return user
 
-    def check_nickname(self, nickname):
-        if User.objects.filter(nickname=nickname).exists():
-            raise serializers.ValidationError({'error': 'This nickname is already in use'})
-        return nickname
+
+def check_nickname(nickname):
+    if User.objects.filter(nickname=nickname).exists():
+        raise serializers.ValidationError({'error': 'This nickname is already in use'})
+    return nickname
