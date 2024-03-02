@@ -17,7 +17,6 @@ python manage.py runserver
 ***
 # 사용
 사용법 총 정리 테이블은 본문 하단 참조
-### URL별 기능
 + `accounts/<social>/login`
     * GET - 소셜로그인 URL 세팅
 + `accounts/<social>/login/callback`
