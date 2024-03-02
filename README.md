@@ -16,7 +16,7 @@ python manage.py runserver
 </pre>
 ***
 # 사용
-사용법 총 정리 테이블은 본문 하단 참조
+사용법 총 정리 테이블은 본문 하단 USUAGE TABLE 참조
 + `accounts/<social>/login`
     * GET - 소셜로그인 URL 세팅
 + `accounts/<social>/login/callback`
