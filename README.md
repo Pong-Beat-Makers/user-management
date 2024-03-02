@@ -1,6 +1,6 @@
 | 앱 이름 | 뷰 명칭 | 요청 타입 | 기능 설명 | 요청 데이터 타입 | 요구 데이터 | 응답 데이터 | 응답 형식 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| social_login | SocialLogin | GET | 소셜로그인 URL 세팅 |  |  | 로그인 URL |  |
+| 'social_login' | SocialLogin | GET | 소셜로그인 URL 세팅 |  |  | 로그인 URL |  |
 |  | SocialLoginCallBack | GET | 액세스 토큰과 리프레시 토큰 발행, 쿠키 세팅 |  |  | 프론트엔드 URL |  |
 | friends | FriendshipView | GET | 사용자의 친구목록 반환 |  |  | 각 친구당 pk, 닉네임, 프로필 | {“pk”: “1”,”nickname”: “user 1”,”profile”: “default”} |
 |  |  | POST | 친구 추가 | HTTP 본문 | friend(pk) | 성공/에러 메세지 | {"success":"1st user added 2nd user as a friend"} |
