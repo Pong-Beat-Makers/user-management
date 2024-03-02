@@ -18,20 +18,20 @@ python manage.py runserver
 # 사용
 사용법 총 정리 테이블은 본문 하단 참조
 ### URL별 기능
-+ `accounts/<social>/login` - 소셜로그인 URL 세팅
-    * GET
-+ `accounts/<social>/login/callback` - 토큰 발행 및 쿠키 세팅
-    * GET
-+ `friends/` - 친구목록, 친구추가
-    * GET
-    * POST: Body: `friend`(pk)
-+ `friends/<int:user_pk>/delete/<int:friend_pk>` - 친구삭제
-    * DELETE
-+ `profile/` - 유저조회, 프로필 수정
-    * GET: Query: `friend`(pk)
-    * PATCH: Body: `profile_to`, `nickname_to`, `status_message_to`
-+ `profile/search/` - 유저 검색
-    * GET: Query: `keyword`
++ `accounts/<social>/login`
+    * GET - 소셜로그인 URL 세팅
++ `accounts/<social>/login/callback`
+    * GET - 토큰 발행 및 쿠키 세팅
++ `friends/`
+    * GET - 친구목록
+    * POST - 친구추가 (Body: `friend`(pk))
++ `friends/<int:user_pk>/delete/<int:friend_pk>`
+    * DELETE - 친구삭제
++ `profile/`
+    * GET - 유저조회 (Query: `friend`(pk))
+    * PATCH - 프로필 수정 (Body: `profile_to`, `nickname_to`, `status_message_to`)
++ `profile/search/`
+    * GET - 유저 검색 (Query: `keyword`)
 ***
 # USUAGE TABLE
 | 앱 이름 | 뷰 명칭 | URL | 요청 타입 | 기능 설명 | 요청 데이터 타입 | 요구 데이터 | 응답 데이터 | 응답 형식 |
