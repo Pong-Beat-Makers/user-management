@@ -31,6 +31,8 @@ python manage.py runserver
     * PATCH - 프로필 수정 (Body: `profile_to`, `nickname_to`, `status_message_to`)
 + `profile/search/`
     * GET - 유저 검색 (Query: `keyword`)
++ 'api/verifying/'
+  +  GET - access token을 request header에 담아 전달
 ***
 # USUAGE TABLE
 | 앱 이름 | 뷰 명칭 | URL | 요청 타입 | 기능 설명 | 요청 데이터 타입 | 요구 데이터 | 응답 데이터 | 응답 형식 |
