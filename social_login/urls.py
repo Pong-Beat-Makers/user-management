@@ -7,5 +7,5 @@ urlpatterns = [
 	path('42intra/login/', views.SocialLogin.as_view(), name='42intra_login'),
 	path('google/login/callback/', views.SocialLoginCallBack.as_view(), name='google_callback'),
 	path('42intra/login/callback/', views.SocialLoginCallBack.as_view(), name='intra_callback'),
-	path('email_verification/', views.EmailVerificationView.as_view(), name='email_verification'),
+	path('email_verification/<str:uidb64>/<str:token>/', views.EmailVerificationView.as_view(), name='email_verification'),
 ]
