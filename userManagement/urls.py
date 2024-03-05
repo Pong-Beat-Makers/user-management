@@ -18,9 +18,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('social_login.urls')),
-    path('profile/', include('user_profile.urls')),
-    path('friends/', include('friends.urls')),
-    path('api/', include('user_api.urls'))
+    path('api/user-management/admin/', admin.site.urls),
+    path('api/user-management/accounts/', include('social_login.urls')),
+    path('api/user-management/profile/', include('user_profile.urls')),
+    path('api/user-management/friends/', include('friends.urls')),
+    path('api/user-management/user-api/', include('user_api.urls'))
 ]
