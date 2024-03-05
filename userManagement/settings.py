@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'social_login.apps.SocialLoginConfig',
     # 'user_profile'
     'user_profile.apps.UserProfileConfig',
+    # 'user_api'
+    'user_api.apps.UserApiConfig',
     # CORS 설정
     'corsheaders',
 ]
