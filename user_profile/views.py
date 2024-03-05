@@ -12,7 +12,6 @@ class UserProfileView(APIView):
     def get(self, request):  # 받는 데이터(Query): user, friend
         user_pk = request.GET['user']
         friend_pk = request.GET['friend']
-        # permission_classes = [IsAuthenticated]
         try:
             # user = request.user
             user = User.objects.get(pk=user_pk)
@@ -26,7 +25,6 @@ class UserProfileView(APIView):
     # 유저 프로필 수정
     def patch(self, request):  # 받는 데이터(Body): user, profile_to, nickname_to, status_message_to
         user_pk = request.data['user']
-        # permission_classes = [IsAuthenticated]
         try:
             # user = request.user
             user = User.objects.get(pk=user_pk)
