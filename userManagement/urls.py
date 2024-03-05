@@ -22,4 +22,5 @@ urlpatterns = [
     path('accounts/', include('social_login.urls')),
     path('profile/', include('user_profile.urls')),
     path('friends/', include('friends.urls')),
+    path('api/', include('user_api.urls'))
 ]
