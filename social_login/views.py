@@ -3,12 +3,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import HttpResponseRedirect
+from rest_framework.permissions import AllowAny
 from . import models
 import requests, os
+# access토큰 payload에 nickname추가
+from .serializers import MyTokenObtainPairSerializer
 
 LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL = \
     None, None, None, None, None, None, None
-
 
 def set_env(request):
     global LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL
@@ -48,6 +50,7 @@ def generate_new_nickname():
 
 
 class SocialLogin(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         set_env(request)
         return Response({
@@ -56,6 +59,7 @@ class SocialLogin(APIView):
 
 
 class SocialLoginCallBack(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
 
         if request.user.is_authenticated:
@@ -76,12 +80,11 @@ class SocialLoginCallBack(APIView):
         if not user:
             user = models.User.objects.create_user(email=email, nickname=generate_new_nickname())
 
-        refresh_token = RefreshToken.for_user(user)
+        refresh_token = MyTokenObtainPairSerializer.get_token(user)
         access_token = refresh_token.access_token
 
         response = HttpResponseRedirect(FE_URL)
-        response.set_cookie('access_token', str(access_token))
-        response.set_cookie('refresh_token', str(refresh_token))
+        response.set_cookie('access_token', str(access_token), httponly=True)
         return response
 
     def get_user_info(self, access_token):
