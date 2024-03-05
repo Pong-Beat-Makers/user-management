@@ -94,7 +94,7 @@ class SocialLoginCallBack(APIView):
             recipient_list = [email]
 
             send_mail(subject, message, from_email, recipient_list)
-            response = HttpResponseRedirect(EV_URL)
+            response = HttpResponseRedirect(EV_URL) # 이메일을 확인해주세요 화면 띄우기
         else:
             response = HttpResponseRedirect(FE_URL)
 
