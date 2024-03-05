@@ -10,7 +10,6 @@ class FriendshipView(APIView):
     # 사용자의 친구목록 반환
     def get(self, request):  # 받는 데이터(Query): user -> IsAuthenticated 사용하면 request.user로 받을 수 있음
         user_pk = request.GET['user']
-        # permission_classes = [IsAuthenticated]
         try:
             # user = request.user
             user = User.objects.get(pk=user_pk)
@@ -22,7 +21,6 @@ class FriendshipView(APIView):
 
     # 친구 추가
     def post(self, request):  # 받는 데이터(Body): user, friend
-        # permission_classes = [IsAuthenticated]
         try:
             serializer = serializers.FriendshipSerializer(data=request.data)
             if serializer.is_valid():
@@ -41,7 +39,6 @@ class FriendshipView(APIView):
 
     # 친구 삭제
     def delete(self, request, user_pk, friend_pk):  # 받는 데이터(URL parameter): user, friend
-        # permission_classes = [IsAuthenticated]
         try:
             # user = request.user
             user = User.objects.get(pk=user_pk)
