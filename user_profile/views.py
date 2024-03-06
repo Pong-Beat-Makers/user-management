@@ -3,11 +3,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from . import serializers
 from social_login.models import User
+from userManagement.permissions import UserPermissionMixin
 
 
-# from rest_framework.permissions import IsAuthenticated
-
-class UserProfileView(APIView):
+class UserProfileView(UserPermissionMixin, APIView):
     # 특정유저 조회
     def get(self, request):  # 받는 데이터(Query): user, friend
         user_pk = request.GET['user']
@@ -40,7 +39,7 @@ class UserProfileView(APIView):
             return Response({'error': f'user {user_pk} not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class SearchUserView(APIView):  # 받는 데이터(Query): keyword
+class SearchUserView(UserPermissionMixin, APIView):  # 받는 데이터(Query): keyword
     # 닉네임으로 유저 검색
     def get(self, request):
         keyword = request.GET['keyword']

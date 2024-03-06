@@ -2,9 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from social_login.serializers import UserSerializer
+from userManagement.permissions import UserPermissionMixin
 
-# Create your views here.
-class VerifyUserView(APIView):
+
+class VerifyUserView(UserPermissionMixin, APIView):
     def get(self, request):
         if request.user.is_authenticated:
             serializers = UserSerializer(request.user)

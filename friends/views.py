@@ -3,10 +3,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from . import serializers
 from social_login.models import User
-from rest_framework.permissions import IsAuthenticated
+from userManagement.permissions import UserPermissionMixin
 
 
-class FriendshipView(APIView):
+class FriendshipView(UserPermissionMixin, APIView):
     # 사용자의 친구목록 반환
     def get(self, request):  # 받는 데이터(Query): user -> IsAuthenticated 사용하면 request.user로 받을 수 있음
         user_pk = request.GET['user']
