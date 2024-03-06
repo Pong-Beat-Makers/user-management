@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes, force_str # force_text는 오류 떠서 일단 지움.
 from . import models
 import requests, os
 # access토큰 payload에 nickname추가
@@ -84,9 +84,9 @@ class SocialLoginCallBack(APIView):
         response = None
         if not user:
             user = models.User.objects.create_user(email=email, nickname=generate_new_nickname())
-            token = default_token_generator.make_token(user)
+            email_token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            verification_url = f"http://127.0.0.1:8000/accounts/email_verification/{uid}/{token}/"
+            verification_url = f"http://127.0.0.1:8000/accounts/email_verification/{uid}/{email_token}/"
 
             subject = 'Email Verification'
             message = f'Please click this link to verify: {verification_url}'
@@ -126,7 +126,7 @@ class EmailVerificationView(APIView):
     permission_classes = [AllowAny]
     def get(self, request, uidb64, token):
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            uid = force_str(urlsafe_base64_decode(uidb64))
             user = models.User.objects.get(pk=uid)
         except(TypeError, ValueError, OverflowError, models.User.DoesNotExist):
             user = None
