@@ -13,24 +13,9 @@ class CreateUser(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, nickname, **kwargs):
-        superuser = self.create_user(
-            email,
-            nickname,
-        )
-        superuser.is_staff = True
-        superuser.is_superuser = True
-        superuser.is_admin = True
-        superuser.save(using=self._db)
-        return superuser
-
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
-    is_active = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     nickname = models.CharField(
@@ -42,6 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     rank = models.IntegerField(default=0)
     profile = models.CharField(default='default', max_length=255)
     status_message = models.CharField(default='', max_length=50, null=False, blank=True)
+    email_verification_code = models.CharField(max_length=6, null=True, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', ]
     objects = CreateUser()

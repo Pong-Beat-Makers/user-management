@@ -14,7 +14,7 @@ class ProfileSerializer(UserSerializer):
         fields = ['profile_to', 'nickname_to', 'status_message_to']
 
     def get_user_info(self, user, friend):
-        is_friend = Friendship.objects.filter(user=user, friend=friend).exists()
+        is_friend = Friendship.objects.filter(user=user.id, friend=friend.id).exists()
         info = {
             'nickname': friend.nickname,
             'profile': friend.profile,

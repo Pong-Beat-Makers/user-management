@@ -6,7 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ['password']
+        exclude = ['password', 'email_verification_code']
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
