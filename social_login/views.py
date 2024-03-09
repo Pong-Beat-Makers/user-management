@@ -2,14 +2,10 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from django.http import HttpResponseRedirect
-from rest_framework.permissions import AllowAny
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_str # force_text는 오류 떠서 일단 지움.
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
 from . import utils
-# access토큰 payload에 nickname추가
-from .serializers import MyTokenObtainPairSerializer
+from .serializers import MyTokenObtainPairSerializer # access토큰 payload에 nickname추가
 
 
 class SocialLogin(APIView):
@@ -25,7 +21,6 @@ class SocialLogin(APIView):
 class SocialLoginCallBack(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
-
         if request.user.is_authenticated:
             return Response({'error': 'already logged in'}, status=status.HTTP_200_OK)
         code = request.GET['code']
@@ -42,33 +37,30 @@ class SocialLoginCallBack(APIView):
         user = User.objects.filter(email=email).first()
 
         response = None
-        if not user or not user.is_active:
+        if not user or user.email_verification_code:
             if not user:
                 user = User.objects.create_user(email=email, nickname=utils.generate_new_nickname())
             utils.send_verification_email(user, request)
-            # response = HttpResponseRedirect(utils.EV_URL) # 이메일을 확인해주세요 화면 띄우기
+            # response = HttpResponseRedirect(utils.EV_URL) # 이메일로 보내진 코드를 입력해주세요 화면 띄우기
             response = Response({'error': 'Please verify your email'}, status=status.HTTP_400_BAD_REQUEST) # 임시 화면
         else:
             response = HttpResponseRedirect(utils.FE_URL)
 
         refresh_token = MyTokenObtainPairSerializer.get_token(user)
         access_token = refresh_token.access_token
-        response.set_cookie('access_token', str(access_token), httponly=True)
+        response.set_cookie('access_token', str(access_token))#, httponly=True)
 
         return response
 
 
 class EmailVerificationView(APIView):
-    permission_classes = [AllowAny]
-    def get(self, request, uidb64, token):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-        if user is not None and default_token_generator.check_token(user, token):
-            user.is_active = True
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        verification_code = request.GET['verification_code']
+        user = request.user
+        if user.email_verification_code == verification_code:
+            user.email_verification_code = None
             user.save()
             return HttpResponseRedirect(utils.FE_URL)
         else:
-            return Response({'error': 'invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'invalid code'}, status=status.HTTP_400_BAD_REQUEST)

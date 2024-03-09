@@ -3,12 +3,11 @@ from .models import Friendship
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
-    user = serializers.IntegerField(source='user.pk')
-    friend = serializers.IntegerField(source='friend.pk')
+    friend = serializers.CharField()
 
     class Meta:
         model = Friendship
-        fields = '__all__'
+        fields = ['friend']
 
     def get_friend_list(self, user):
         friendships = Friendship.objects.filter(user=user)
@@ -23,8 +22,6 @@ class FriendshipSerializer(serializers.ModelSerializer):
         return friend_list
 
     def create_friendship(self, user, friend):
-        if user is None or friend is None:
-            raise serializers.ValidationError({'error': 'Invalid input'})
         if user == friend:
             raise serializers.ValidationError({'error': 'You cannot add yourself as a friend'})
         if Friendship.objects.filter(user=user, friend=friend).exists():
@@ -35,7 +32,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
     def delete_friendship(self, user, friend):
         if user == friend:
             raise serializers.ValidationError({'error': 'You cannot delete yourself as a friend'})
-        friendship = Friendship.objects.filter(user=user, friend=friend).first()
+        friendship = Friendship.objects.filter(user=user.id, friend=friend.id).first()
         if friendship is None:
             raise serializers.ValidationError({'error': 'You are not friends'})
         friendship.delete()

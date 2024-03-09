@@ -83,8 +83,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'younghye0709@gmail.com' # TODO : 배포 시 수정
-EMAIL_HOST_PASSWORD = 'dudgP0709!' # TODO : 배포 시 수정
+EMAIL_HOST_USER = 'elinlim22@gmail.com' # TODO : 배포 시 수정
+EMAIL_HOST_PASSWORD = 'qqyermuucgipxypy' # TODO : 배포 시 수정
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
