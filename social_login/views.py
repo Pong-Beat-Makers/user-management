@@ -36,16 +36,12 @@ class SocialLoginCallBack(APIView):
         email = user_info.get('email')
         user = User.objects.filter(email=email).first()
 
-        response = None
-        if not user or user.email_verification_code:
-            if not user:
-                user = User.objects.create_user(email=email, nickname=utils.generate_new_nickname())
+        if not user:
+            user = User.objects.create_user(email=email, nickname=utils.generate_new_nickname())
+        if user.email_verification_code:
             utils.send_verification_email(user, request)
-            # response = HttpResponseRedirect(utils.EV_URL) # 이메일로 보내진 코드를 입력해주세요 화면 띄우기
-            response = Response({'error': 'Please verify your email'}, status=status.HTTP_400_BAD_REQUEST) # 임시 화면
-        else:
-            response = HttpResponseRedirect(utils.FE_URL)
 
+        response = HttpResponseRedirect(utils.FE_URL)
         refresh_token = MyTokenObtainPairSerializer.get_token(user)
         access_token = refresh_token.access_token
         response.set_cookie('access_token', str(access_token))#, httponly=True)
