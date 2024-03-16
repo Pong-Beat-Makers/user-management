@@ -1,3 +1,4 @@
+set -e
 python manage.py makemigrations social_login
 python manage.py migrate social_login
 
