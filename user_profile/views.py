@@ -11,10 +11,12 @@ class UserProfileView(APIView):
     def get(self, request):  # 받는 데이터(Body): friend
         try:
             user = request.user
-            friend = User.objects.get(nickname=request.data['friend'])
+            friend = User.objects.get(nickname=request.GET['friend'])
             serializer = serializers.ProfileSerializer(data=request.data)
-            info = serializer.get_user_info(user, friend)
-            return Response(info, status=status.HTTP_200_OK)
+            if user == friend:
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(data=serializer.get_user_info(), status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'error': f"friend {request.data['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
         except AuthenticationFailed as e:
