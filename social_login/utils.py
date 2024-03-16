@@ -2,15 +2,13 @@ from . import models
 from django.core.mail import send_mail
 import os, requests
 
-LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL, EV_URL = \
-    None, None, None, None, None, None, None, None
-
+LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL = \
+    None, None, None, None, None, None, None
 
 def set_env(request):
-    global LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL, EV_URL
+    global LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL
     path = request.path
     FE_URL = os.environ.get('FE_URL')
-    EV_URL = os.environ.get('EV_URL')
     if 'google' in path:
         LOGIN_URL = (
                 'https://accounts.google.com/o/oauth2/v2/auth' +
