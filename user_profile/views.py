@@ -8,13 +8,12 @@ from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
 
 class UserProfileView(APIView):
     # 특정유저 조회
-    def get(self, request):  # 받는 데이터(Body): friend
+    def get(self, request):  # 받는 데이터(query): friend
         try:
             user = request.user
-            friend = User.objects.get(nickname=request.data['friend'])
-            serializer = serializers.ProfileSerializer(data=request.data)
-            info = serializer.get_user_info(user, friend)
-            return Response(info, status=status.HTTP_200_OK)
+            friend = User.objects.get(nickname=request.GET['friend'])
+            serializer = serializers.ProfileSerializer()
+            return Response(data=serializer.get_user_info(user, friend), status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'error': f"friend {request.data['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
         except AuthenticationFailed as e:
@@ -44,4 +43,7 @@ class SearchUserView(APIView):  # 받는 데이터(Query): keyword
     def get(self, request):
         keyword = request.GET['keyword']
         matched_users = User.objects.filter(nickname__icontains=keyword).exclude(nickname=request.user.nickname)
-        return Response([user.nickname for user in matched_users], status=status.HTTP_200_OK)
+        return Response([{
+            'nickname': user.nickname,
+            'profile': user.profile,
+        } for user in matched_users], status=status.HTTP_200_OK)
