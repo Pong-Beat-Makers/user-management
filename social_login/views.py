@@ -38,7 +38,7 @@ class SocialLoginCallBack(APIView):
 
         if not user:
             user = User.objects.create_user(email=email, nickname=utils.generate_new_nickname())
-        if user.email_verification_code:
+        if not user.email_verification_code:
             utils.send_verification_email(user, request)
 
         response = HttpResponseRedirect(utils.FE_URL)
