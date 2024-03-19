@@ -8,9 +8,15 @@ drf를 이용한 유저 회원가입과 로그인, 유저관련 db 처리
 # 실행방법
 <pre>
 <code>
+# 가상환경 실행
+source venv(가상환경이름)/bin/activate
+# 필요라이브러리 설치
 pip install -r requirements.txt
-python manage.py makemigrations social_login
-python manage.py migrate social_login
+# 마이그레이션 생성
+python manage.py makemigrations social_login friends
+# 마이그레이션 적용
+python manage.py migrate
+# 서버 실행
 python manage.py runserver
 </code>
 </pre>
