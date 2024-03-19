@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from friends.views import s2s_FriendshipView
 
 urlpatterns = [
     path('api/user-management/admin/', admin.site.urls),
     path('api/user-management/accounts/', include('social_login.urls')),
     path('api/user-management/profile/', include('user_profile.urls')),
     path('api/user-management/friends/', include('friends.urls')),
-    path('api/user-management/user-api/', include('user_api.urls'))
+    path('api/user-management/user-api/', include('user_api.urls')),
+    path('s2sapi/user-management/friends/', s2s_FriendshipView.as_view()),
 ]
