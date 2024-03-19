@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from . import serializers
 from social_login.models import User
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
+from rest_framework.permissions import AllowAny
 
 
 class FriendshipView(APIView):
@@ -53,3 +54,15 @@ class FriendshipView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
         except PermissionDenied as e:
             return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
+
+class s2s_FriendshipView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        try:
+            nickname = request.GET['nickname']
+            user = User.objects.get(nickname=nickname)
+            serializer = serializers.FriendshipSerializer()
+            friend_list = serializer.get_friend_list(user)
+            return Response(friend_list, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': f"user {nickname} not found"}, status=status.HTTP_404_NOT_FOUND)
