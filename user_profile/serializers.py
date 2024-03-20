@@ -37,8 +37,12 @@ class ProfileSerializer(UserSerializer):
         user.save()
         return user
 
-
 def check_nickname(nickname):
     if User.objects.filter(nickname=nickname).exists():
         raise serializers.ValidationError({'error': 'This nickname is already in use'})
     return nickname
+
+class GameRankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["nickname", "profile"]
