@@ -43,7 +43,7 @@ def check_nickname(nickname):
         raise serializers.ValidationError({'error': 'This nickname is already in use'})
     return nickname
 
-class GameRankSerializer(serializers.ModelSerializer):
+class RankerUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["nickname", "profile"]
