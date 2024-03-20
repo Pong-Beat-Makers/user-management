@@ -7,8 +7,6 @@ from social_login.models import User
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
 
-PAGE_SIZE = os.getenv('PAGE_SIZE')
-
 class UserProfileView(APIView):
     # 특정유저 조회
     def get(self, request):  # 받는 데이터(query): friend
@@ -57,9 +55,9 @@ class GameRankerView(APIView):
         paginator = PageNumberPagination()
         page = paginator.paginate_queryset(ranker, request, view=self)
         if page is not None:
-            serializer = serializers.GameRankerSerializer(page, many=True)
+            serializer = serializers.RankerUserSerializer(page, many=True)
             return paginator.get_paginated_response(serializer.data)
-        serializer = serializers.GameRankSerializer(ranker, many=True)
+        serializer = serializers.RankerUserSerializer(ranker, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
