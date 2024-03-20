@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+DEFAULT = False
+UPLOAD = True
 
 class CreateUser(BaseUserManager):
     def create_user(self, email, nickname, **kwargs):
@@ -16,19 +18,20 @@ class CreateUser(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     nickname = models.CharField(
         max_length=15,
         unique=True,
     )
-    win = models.IntegerField(default=0)
-    lose = models.IntegerField(default=0)
-    rank = models.IntegerField(default=0)
-    profile = models.CharField(default='default', max_length=255)
+    profile = models.BooleanField(default=DEFAULT)
+    uploaded_image = models.TextField(default=None, null=True, blank=True)
     status_message = models.CharField(default='', max_length=50, null=False, blank=True)
     email_verification_code = models.CharField(max_length=6, null=True, blank=True)
     set_2fa = models.BooleanField(default=False)
+    win = models.IntegerField(default=0)
+    lose = models.IntegerField(default=0)
+    rank = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', ]
     objects = CreateUser()
