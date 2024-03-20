@@ -33,5 +33,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['nickname', ]
     objects = CreateUser()
 
+    def increase_win(self):
+        self.win += 1
+        self.save()
+    def increase_lose(self):
+        self.lose += 1
+        self.save()
+    def change_rank(self, point):
+        if self.rank + point >= 0:
+            self.rank += point
+            self.save()
     def __str__(self):
         return self.email
