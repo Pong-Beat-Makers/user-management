@@ -22,7 +22,7 @@ class UserProfileView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
     # 유저 프로필 수정
-    def patch(self, request):  # 받는 데이터(Body): profile_to, nickname_to, status_message_to
+    def patch(self, request):  # 받는 데이터(Body): profile_to, nickname_to, status_message_to, set_2fa_to
         try:
             user = request.user
             serializer = serializers.ProfileSerializer(data=request.data, partial=True)

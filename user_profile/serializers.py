@@ -8,10 +8,11 @@ class ProfileSerializer(UserSerializer):
     profile_to = serializers.CharField(source='profile', max_length=255)
     nickname_to = serializers.CharField(source='nickname', max_length=15)
     status_message_to = serializers.CharField(source='status_message', max_length=50, allow_blank=True)
+    set_2fa_to = serializers.BooleanField(source='set_2fa')
 
     class Meta:
         model = User
-        fields = ['profile_to', 'nickname_to', 'status_message_to']
+        fields = ['profile_to', 'nickname_to', 'status_message_to', 'set_2fa_to']
 
     def get_user_info(self, user, friend):
         is_friend = Friendship.objects.filter(user=user.id, friend=friend.id).exists()
@@ -27,7 +28,7 @@ class ProfileSerializer(UserSerializer):
         return info
 
     def update(self, user, validated_data):
-        fields = ['profile', 'nickname', 'status_message']
+        fields = ['profile', 'nickname', 'status_message', 'set_2fa']
         for field in fields:
             value = validated_data.get(field, getattr(user, field))
             if value != getattr(user, field):
