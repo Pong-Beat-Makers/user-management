@@ -9,7 +9,6 @@ class VerifyUserView(APIView):
     def get(self, request):
         try:
             serializers = UserSerializer(request.user)
-            print(serializers.data)
             return Response(serializers.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
