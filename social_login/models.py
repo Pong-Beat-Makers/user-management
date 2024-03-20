@@ -28,6 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile = models.CharField(default='default', max_length=255)
     status_message = models.CharField(default='', max_length=50, null=False, blank=True)
     email_verification_code = models.CharField(max_length=6, null=True, blank=True)
+    set_2fa = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', ]
     objects = CreateUser()
