@@ -48,7 +48,6 @@ class SocialLoginCallBack(APIView):
 
         return response
 
-
 class EmailVerificationView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):

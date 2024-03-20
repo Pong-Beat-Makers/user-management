@@ -1,10 +1,13 @@
+import os
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from . import serializers
 from social_login.models import User
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
+from rest_framework.pagination import PageNumberPagination
 
+PAGE_SIZE = os.getenv('PAGE_SIZE')
 
 class UserProfileView(APIView):
     # 특정유저 조회
@@ -47,3 +50,17 @@ class SearchUserView(APIView):  # 받는 데이터(Query): keyword
             'nickname': user.nickname,
             'profile': user.profile,
         } for user in matched_users], status=status.HTTP_200_OK)
+
+class GameRankerView(APIView):
+    def get(self, request):
+        ranker = User.objects.all().order_by('-rank')
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(ranker, request, view=self)
+        if page is not None:
+            serializer = serializers.GameRankerSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        serializer = serializers.GameRankSerializer(ranker, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+        
