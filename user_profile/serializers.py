@@ -2,6 +2,7 @@ from rest_framework import serializers
 from social_login.serializers import UserSerializer
 from social_login.models import User
 from friends.models import Friendship
+import re
 
 
 class ProfileSerializer(UserSerializer):
@@ -40,6 +41,8 @@ class ProfileSerializer(UserSerializer):
         return user
 
 def check_nickname(nickname):
+    if re.match(r"^User\d*$", nickname, re.IGNORECASE):
+        raise serializers.ValidationError({'error': 'Please avoid using default nickname'})
     if User.objects.filter(nickname=nickname).exists():
         raise serializers.ValidationError({'error': 'This nickname is already in use'})
     return nickname
