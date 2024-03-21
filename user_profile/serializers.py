@@ -16,8 +16,6 @@ class ProfileSerializer(UserSerializer):
         fields = ['profile_to', 'nickname_to', 'status_message_to', 'set_2fa_to']
 
     def get_user_info(self, user, friend):
-        is_friend = Friendship.objects.filter(user=user.id, friend=friend.id).exists()
-
         info = {
             'nickname': friend.nickname,
             'profile': friend.profile,
@@ -25,8 +23,11 @@ class ProfileSerializer(UserSerializer):
             'win': friend.win,
             'lose': friend.lose,
             'rank': friend.rank,
-            'is_friend': is_friend  # 자기 자신을 조회할 경우 프론트에서 사용되지 않으므로 False여도 상관 없음
         }
+        if user == friend:
+            info['set_2fa'] = friend.set_2fa
+        else:
+            info['is_friend'] = Friendship.objects.filter(user=user.id, friend=friend.id).exists()
         return info
 
     def update(self, user, validated_data):
