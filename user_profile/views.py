@@ -38,6 +38,22 @@ class UserProfileView(APIView):
         except PermissionDenied as e:
             return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
+    # 유저 프로필 이미지 업로드
+    def post(self, request):
+        try:
+            user = request.user
+            serializer = serializers.ProfileImageSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.upload_profile(user, serializer.validated_data)
+                return Response({'message': 'success'}, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+        except AuthenticationFailed as e:
+            return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        except PermissionDenied as e:
+            return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
+
 
 class SearchUserView(APIView):  # 받는 데이터(Query): keyword
     # 닉네임으로 유저 검색
@@ -59,6 +75,3 @@ class GameRankerView(APIView):
             return paginator.get_paginated_response(serializer.data)
         serializer = serializers.RankerUserSerializer(ranker, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-        
