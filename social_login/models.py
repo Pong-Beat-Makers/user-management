@@ -22,8 +22,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=15,
         unique=True,
     )
-    profile = models.BooleanField(default=DEFAULT)
-    uploaded_image = models.TextField(default=None, null=True, blank=True)
+    profile = models.TextField(default="cat")
     status_message = models.CharField(default='', max_length=50, null=False, blank=True)
     email_verification_code = models.CharField(max_length=6, null=True, blank=True)
     set_2fa = models.BooleanField(default=False)
