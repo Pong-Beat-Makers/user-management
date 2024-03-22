@@ -55,6 +55,5 @@ class GameRankerView(APIView):
         page = paginator.paginate_queryset(ranker, request, view=self)
         if page is not None:
             serializer = serializers.RankerUserSerializer(page, many=True)
-            return paginator.get_paginated_response(serializer.data)
-        serializer = serializers.RankerUserSerializer(ranker, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({ 'message': ' No player in the database.' }, status=status.HTTP_200_OK)
