@@ -44,6 +44,8 @@ class ProfileSerializer(UserSerializer):
 def check_nickname(nickname):
     if re.match(r"^User\d*$", nickname, re.IGNORECASE):
         raise serializers.ValidationError({'error': 'Please avoid using default nickname'})
+    if "\n" in nickname:
+        raise serializers.ValidationError({'error': 'Nickname should not contain newline character'})
     if User.objects.filter(nickname=nickname).exists():
         raise serializers.ValidationError({'error': 'This nickname is already in use'})
     return nickname
