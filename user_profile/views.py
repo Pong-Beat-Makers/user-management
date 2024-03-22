@@ -9,10 +9,10 @@ from rest_framework.pagination import PageNumberPagination
 
 class UserProfileView(APIView):
     # 특정유저 조회
-    def get(self, request):  # 받는 데이터(query): friend
+    def get(self, request):  # 받는 데이터(query): id
         try:
             user = request.user
-            friend = User.objects.get(nickname=request.GET['friend'])
+            friend = User.objects.get(id=request.GET['id'])
             serializer = serializers.ProfileSerializer()
             return Response(data=serializer.get_user_info(user, friend), status=status.HTTP_200_OK)
         except User.DoesNotExist:
@@ -44,6 +44,7 @@ class SearchUserView(APIView):  # 받는 데이터(Query): keyword
         keyword = request.GET['keyword']
         matched_users = User.objects.filter(nickname__icontains=keyword).exclude(nickname=request.user.nickname)
         return Response([{
+            'id': user.id,
             'nickname': user.nickname,
             'profile': user.profile,
         } for user in matched_users], status=status.HTTP_200_OK)
