@@ -22,10 +22,10 @@ class FriendshipView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
     # 친구 추가
-    def post(self, request):  # 받는 데이터(Body): friend
+    def post(self, request):  # 받는 데이터(Body): id
         try:
             user = request.user
-            friend = User.objects.get(nickname=request.data['friend'])
+            friend = User.objects.get(id=request.data['id'])
             serializer = serializers.FriendshipSerializer(data=request.data)
             if serializer.is_valid():
                 friendship = serializer.create_friendship(user, friend)
@@ -41,10 +41,10 @@ class FriendshipView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
     # 친구 삭제
-    def delete(self, request):  # 받는 데이터(Body): friend
+    def delete(self, request):  # 받는 데이터(Body): id
         try:
             user = request.user
-            friend = User.objects.get(nickname=request.data['friend'])
+            friend = User.objects.get(id=request.data['id'])
             serializer = serializers.FriendshipSerializer(data=request.data)
             serializer.delete_friendship(user, friend)
             return Response({'success': f'{user.nickname} deleted friend {friend.nickname}'}, status=status.HTTP_200_OK)
@@ -55,14 +55,15 @@ class FriendshipView(APIView):
         except PermissionDenied as e:
             return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
+
 class s2s_FriendshipView(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         try:
-            nickname = request.GET['nickname']
-            user = User.objects.get(nickname=nickname)
+            user_id = request.GET['id']
+            user = User.objects.get(id=user_id)
             serializer = serializers.FriendshipSerializer()
             friend_list = serializer.get_friend_list(user)
             return Response(friend_list, status=status.HTTP_200_OK)
         except User.DoesNotExist:
-            return Response({'error': f"user {nickname} not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': "user not found"}, status=status.HTTP_404_NOT_FOUND)
