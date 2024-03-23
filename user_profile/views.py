@@ -18,7 +18,7 @@ class UserProfileView(APIView):
         except User.DoesNotExist:
             return Response({'error': f"friend {request.GET['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
         except MultiValueDictKeyError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'plz give "id" data'}, status=status.HTTP_400_BAD_REQUEST)
 
     # 유저 프로필 수정
     def patch(self, request):  # 받는 데이터(Body): profile_to, nickname_to, status_message_to, set_2fa_to
@@ -43,8 +43,8 @@ class SearchUserView(APIView):  # 받는 데이터(Query): keyword
                 'nickname': user.nickname,
                 'profile': user.profile,
             } for user in matched_users], status=status.HTTP_200_OK)
-        except MultiValueDictKeyError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST_FORBIDDEN)
+        except MultiValueDictKeyError:
+            return Response({'error': 'plz give "keyword" data'}, status=status.HTTP_400_BAD_REQUEST_FORBIDDEN)
 
 class GameRankerView(APIView):
     def get(self, request):

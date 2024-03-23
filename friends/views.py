@@ -32,7 +32,7 @@ class FriendshipView(APIView):
         except User.DoesNotExist:
             return Response({'error': f"friend {request.data['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
         except MultiValueDictKeyError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'plz give "id" data'}, status=status.HTTP_400_BAD_REQUEST)
 
     # 친구 삭제
     def delete(self, request):  # 받는 데이터(Body): id
@@ -45,7 +45,7 @@ class FriendshipView(APIView):
         except User.DoesNotExist:
             return Response({'error': f"friend {request.data['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
         except MultiValueDictKeyError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'plz give "id" data'}, status=status.HTTP_400_BAD_REQUEST)
 
 class s2s_FriendshipView(APIView):
     permission_classes = [AllowAny]
@@ -59,4 +59,4 @@ class s2s_FriendshipView(APIView):
         except User.DoesNotExist:
             return Response({'error': "user not found"}, status=status.HTTP_404_NOT_FOUND)
         except MultiValueDictKeyError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'plz give "id" data'}, status=status.HTTP_400_BAD_REQUEST)
