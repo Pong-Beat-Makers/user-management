@@ -16,8 +16,8 @@ class VerifyUserView(APIView):
 class UpdateUserGameStatusView(APIView):
     permission_classes = [AllowAny]
     def patch(self, request):
-        winner = User.objects.get(nickname=request.data['winner'])
-        loser = User.objects.get(nickname=request.data['loser'])
+        winner = User.objects.get(id=request.data['winner_id'])
+        loser = User.objects.get(id=request.data['loser_id'])
         winner.increase_win()
         loser.increase_lose()
         return Response(status=status.HTTP_201_CREATED)
