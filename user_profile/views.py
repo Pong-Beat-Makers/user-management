@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from . import serializers
 from social_login.models import User
-from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework.pagination import PageNumberPagination
 
 class UserProfileView(APIView):
@@ -17,10 +17,8 @@ class UserProfileView(APIView):
             return Response(data=serializer.get_user_info(user, friend), status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'error': f"friend {request.GET['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
-        except AuthenticationFailed as e:
-            return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
-        except PermissionDenied as e:
-            return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
+        except MultiValueDictKeyError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     # 유저 프로필 수정
     def patch(self, request):  # 받는 데이터(Body): profile_to, nickname_to, status_message_to, set_2fa_to
@@ -33,21 +31,20 @@ class UserProfileView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
-        except AuthenticationFailed as e:
-            return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
-        except PermissionDenied as e:
-            return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
 class SearchUserView(APIView):  # 받는 데이터(Query): keyword
     # 닉네임으로 유저 검색
     def get(self, request):
-        keyword = request.GET['keyword']
-        matched_users = User.objects.filter(nickname__icontains=keyword).exclude(nickname=request.user.nickname)
-        return Response([{
-            'id': user.id,
-            'nickname': user.nickname,
-            'profile': user.profile,
-        } for user in matched_users], status=status.HTTP_200_OK)
+        try:
+            keyword = request.GET['keyword']
+            matched_users = User.objects.filter(nickname__icontains=keyword).exclude(nickname=request.user.nickname)
+            return Response([{
+                'id': user.id,
+                'nickname': user.nickname,
+                'profile': user.profile,
+            } for user in matched_users], status=status.HTTP_200_OK)
+        except MultiValueDictKeyError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST_FORBIDDEN)
 
 class GameRankerView(APIView):
     def get(self, request):
