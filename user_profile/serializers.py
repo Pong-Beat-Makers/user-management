@@ -17,6 +17,7 @@ class ProfileSerializer(UserSerializer):
 
     def get_user_info(self, user, friend):
         info = {
+            'id': friend.id,
             'nickname': friend.nickname,
             'profile': friend.profile,
             'status_message': friend.status_message,

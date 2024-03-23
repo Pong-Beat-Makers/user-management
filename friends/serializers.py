@@ -14,7 +14,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
         friend_list = []
         for friendship in friendships:
             friend_data = {
-                'pk': friendship.friend.pk,
+                'id': friendship.friend.id,
                 'nickname': friendship.friend.nickname,
                 'profile': friendship.friend.profile
             }
