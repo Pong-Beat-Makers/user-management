@@ -16,7 +16,7 @@ class UserProfileView(APIView):
             serializer = serializers.ProfileSerializer()
             return Response(data=serializer.get_user_info(user, friend), status=status.HTTP_200_OK)
         except User.DoesNotExist:
-            return Response({'error': f"friend {request.data['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': f"friend {request.GET['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
         except AuthenticationFailed as e:
             return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
         except PermissionDenied as e:
