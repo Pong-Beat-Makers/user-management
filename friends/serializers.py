@@ -1,9 +1,30 @@
 from rest_framework import serializers
+from django.shortcuts import get_object_or_404
 from .models import Friendship
+from social_login.models import User
 
+class AddFriendSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        fields = ['id']
+
+    def save(self, **kwargs):
+        for key, value in kwargs.items():
+            self.validated_data[key] = value
+        return super().save(**kwargs)
+    def create(self, validated_data):
+        user = self.validated_data.get('user', None)
+        friend = User.objects.get(pk=validated_data['id'])
+        if user == friend:
+            raise serializers.ValidationError({'error': 'You cannot add yourself as a friend'})
+        if Friendship.objects.filter(user=user, friend=friend).exists():
+            raise serializers.ValidationError({'error': 'You are already friends'})
+        friendship = Friendship.objects.create(user=user, friend=friend)
+        return friendship
 
 class FriendshipSerializer(serializers.ModelSerializer):
-    friend = serializers.CharField()
+    friend = serializers.CharField(allow_blank=True, required=False)
 
     class Meta:
         model = Friendship
@@ -21,18 +42,18 @@ class FriendshipSerializer(serializers.ModelSerializer):
             friend_list.append(friend_data)
         return friend_list
 
-    def create_friendship(self, user, friend):
-        if user == friend:
-            raise serializers.ValidationError({'error': 'You cannot add yourself as a friend'})
-        if Friendship.objects.filter(user=user, friend=friend).exists():
-            raise serializers.ValidationError({'error': 'You are already friends'})
-        friendship = Friendship.objects.create(user=user, friend=friend)
-        return friendship
-
-    def delete_friendship(self, user, friend):
-        if user == friend:
-            raise serializers.ValidationError({'error': 'You cannot delete yourself as a friend'})
-        friendship = Friendship.objects.filter(user=user.id, friend=friend.id).first()
-        if friendship is None:
-            raise serializers.ValidationError({'error': 'You are not friends'})
-        friendship.delete()
+    # def create_friendship(self, user, friend):
+    #     if user == friend:
+    #         raise serializers.ValidationError({'error': 'You cannot add yourself as a friend'})
+    #     if Friendship.objects.filter(user=user, friend=friend).exists():
+    #         raise serializers.ValidationError({'error': 'You are already friends'})
+    #     friendship = Friendship.objects.create(user=user, friend=friend)
+    #     return friendship
+    #
+    # def delete_friendship(self, user, friend):
+    #     if user == friend:
+    #         raise serializers.ValidationError({'error': 'You cannot delete yourself as a friend'})
+    #     friendship = Friendship.objects.filter(user=user.id, friend=friend.id).first()
+    #     if friendship is None:
+    #         raise serializers.ValidationError({'error': 'You are not friends'})
+    #     friendship.delete()
