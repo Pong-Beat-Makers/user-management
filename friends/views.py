@@ -14,7 +14,7 @@ class FriendshipView(APIView):
 
     def get(self, request):
         user = request.user
-        serializer = serializers.FriendshipSerializer(data=request.data)
+        serializer = serializers.FriendshipSerializer()
         friend_list = serializer.get_friend_list(user)
         return Response(friend_list, status=status.HTTP_200_OK)
 
