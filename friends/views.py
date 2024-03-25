@@ -14,41 +14,41 @@ class FriendshipView(APIView):
 
     def get(self, request):
         user = request.user
-        serializer = serializers.FriendshipSerializer(data=request.data)
+        serializer = serializers.FriendshipSerializer()
         friend_list = serializer.get_friend_list(user)
         return Response(friend_list, status=status.HTTP_200_OK)
+
     # 친구 추가
     def post(self, request):  # 받는 데이터(Body): id
         try:
             user = request.user
-            friend = User.objects.get(id=request.data['id'])
-            serializer = serializers.FriendshipSerializer(data=request.data)
+            serializer = serializers.AddFriendSerializer(data=request.data)
             if serializer.is_valid():
-                friendship = serializer.create_friendship(user, friend)
+                serializer.save(user=user)
                 return Response(
-                    {'success': f'{friendship.user.nickname} added {friendship.friend.nickname} as a friend'},
+                    {'success': f'{user.id} added {serializer.validated_data['id']} as a friend'},
                     status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
-            return Response({'error': f"friend {request.data['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
-        except MultiValueDictKeyError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({'error': f"id {serializer.validated_data['id']} not found"},
+                            status=status.HTTP_404_NOT_FOUND)
     # 친구 삭제
     def delete(self, request):  # 받는 데이터(Body): id
         try:
             user = request.user
-            friend = User.objects.get(id=request.data['id'])
-            serializer = serializers.FriendshipSerializer(data=request.data)
-            serializer.delete_friendship(user, friend)
-            return Response({'success': f'{user.nickname} deleted friend {friend.nickname}'}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({'error': f"friend {request.data['friend']} not found"}, status=status.HTTP_404_NOT_FOUND)
-        except MultiValueDictKeyError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            serializer = serializers.AddFriendSerializer(data=request.data)
+            if serializer.is_valid():
+                friend = serializer.validated_data['id']
+                friendship = Friendship.objects.get(user=user, friend=friend)
+                friendship.delete()
+                return Response({'success': f'{user.id} deleted id {friend}'}, status=status.HTTP_200_OK)
+        except Friendship.DoesNotExist:
+            return Response({'error': f"friend {friend} not found"},
+                            status=status.HTTP_404_NOT_FOUND)
 
 class s2s_FriendshipView(APIView):
     permission_classes = [AllowAny]
+
     def get(self, request):
         try:
             user_id = request.GET['id']
@@ -59,4 +59,4 @@ class s2s_FriendshipView(APIView):
         except User.DoesNotExist:
             return Response({'error': "user not found"}, status=status.HTTP_404_NOT_FOUND)
         except MultiValueDictKeyError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'plz give "id" data'}, status=status.HTTP_400_BAD_REQUEST)
