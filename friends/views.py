@@ -59,4 +59,4 @@ class s2s_FriendshipView(APIView):
         except User.DoesNotExist:
             return Response({'error': "user not found"}, status=status.HTTP_404_NOT_FOUND)
         except MultiValueDictKeyError as e:
-            return Response({'error': 'plz give "id" data'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': '"id" data is required'}, status=status.HTTP_400_BAD_REQUEST)
