@@ -26,7 +26,7 @@ class FriendshipView(APIView):
             if serializer.is_valid():
                 serializer.save(user=user)
                 return Response(
-                    {'success': f'{user.id} added {serializer.validated_data['id']} as a friend'},
+                    {'success': f"{user.id} added {serializer.validated_data['id']} as a friend"},
                     status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
