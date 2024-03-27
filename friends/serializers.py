@@ -15,9 +15,7 @@ class AddFriendSerializer(serializers.Serializer):
         return super().save(**kwargs)
     def create(self, validated_data):
         user = self.validated_data.get('user', None)
-        print(user)
         friend = User.objects.get(pk=validated_data['id'])
-        print(friend)
         if user == friend:
             raise serializers.ValidationError({'error': 'You cannot add yourself as a friend'})
         if Friendship.objects.filter(user=user, friend=friend).exists():
