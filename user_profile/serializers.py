@@ -55,4 +55,4 @@ def check_nickname(nickname):
 class RankerUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["nickname", "profile"]
+        fields = ["id", "profile"]
