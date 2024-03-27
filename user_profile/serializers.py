@@ -3,7 +3,7 @@ from social_login.serializers import UserSerializer
 from social_login.models import User
 from friends.models import Friendship
 import re
-
+from django.utils.html import conditional_escape
 
 class ProfileSerializer(UserSerializer):
     profile_to = serializers.CharField(source='profile')
@@ -38,6 +38,7 @@ class ProfileSerializer(UserSerializer):
             if value != getattr(user, field):
                 if field == 'nickname':
                     value = check_nickname(value)
+                value = conditional_escape(value)
                 setattr(user, field, value)
         user.save()
         return user
