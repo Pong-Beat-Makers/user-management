@@ -18,6 +18,12 @@ class UpdateUserGameStatusView(APIView):
     def patch(self, request):
         winner = User.objects.get(id=request.data['winner_id'])
         loser = User.objects.get(id=request.data['loser_id'])
+        game_type = request.data['game_type']
         winner.increase_win()
         loser.increase_lose()
+        if game_type == 'Tournament-First Round':
+            loser.change_rank(-20)
+        elif game_type == 'Tournament-Final Round':
+            winner.change_rank(40)
+            loser.change_rank(20)
         return Response(status=status.HTTP_201_CREATED)
