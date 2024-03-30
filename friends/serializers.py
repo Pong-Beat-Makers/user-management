@@ -41,3 +41,9 @@ class FriendshipSerializer(serializers.ModelSerializer):
             }
             friend_list.append(friend_data)
         return friend_list
+
+class GetUserFriendSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='user.id', read_only=True)
+    class Meta:
+        model = Friendship
+        fields = ['id']

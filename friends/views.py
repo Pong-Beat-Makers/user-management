@@ -60,3 +60,15 @@ class s2s_FriendshipView(APIView):
             return Response({'error': "user not found"}, status=status.HTTP_404_NOT_FOUND)
         except MultiValueDictKeyError as e:
             return Response({'error': '"id" data is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+class s2s_FriendAddMeview(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        try:
+            user_id = request.GET['id']
+            friendship = Friendship.objects.filter(friend_id=user_id)
+            serializer = serializers.GetUserFriendSerializer(friendship, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except MultiValueDictKeyError as e:
+            return Response({'error': '"id" data is required'}, status=status.HTTP_400_BAD_REQUEST)
