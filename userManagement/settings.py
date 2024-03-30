@@ -27,8 +27,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
-    'localhost',
+    os.environ.get('DOMAIN', 'localhost'),
     '127.0.0.1',
+    'user-management',
 ]
 
 AUTH_USER_MODEL = 'social_login.User'
