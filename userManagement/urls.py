@@ -23,7 +23,7 @@ urlpatterns = [
     path('api/user-management/accounts/', include('social_login.urls')),
     path('api/user-management/profile/', include('user_profile.urls')),
     path('api/user-management/friends/', include('friends.urls')),
-    path('s2sapi/user-management/friends/frinedaddme', s2s_FriendAddMeview.as_view()),
+    path('s2sapi/user-management/friends/friendaddme/', s2s_FriendAddMeview.as_view()),
     path('s2sapi/user-management/friends/', s2s_FriendshipView.as_view()),
     path('s2sapi/user-management/user-api/', include('user_api.urls')),
 ]
