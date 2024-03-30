@@ -21,9 +21,9 @@ class UpdateUserGameStatusView(APIView):
         game_type = request.data['game_type']
         winner.increase_win()
         loser.increase_lose()
-        if (game_type == 'Tournament-First Round'):
+        if game_type == 'Tournament-First Round':
             loser.change_rank(-20)
-        if (game_type == 'Tournament-Final Round'):
+        elif game_type == 'Tournament-Final Round':
             winner.change_rank(40)
             loser.change_rank(20)
         return Response(status=status.HTTP_201_CREATED)
