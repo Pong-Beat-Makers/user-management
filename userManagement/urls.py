@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from friends.views import s2s_FriendshipView, s2s_FriendAsUserview
 
 urlpatterns = [
     path('api/user-management/admin/', admin.site.urls),
