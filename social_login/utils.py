@@ -1,6 +1,7 @@
 from . import models
 from django.core.mail import send_mail
 import os, requests
+import random
 
 LOGIN_URL, USER_INFO_URL, TOKEN_URL, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET, FE_URL = \
     None, None, None, None, None, None, None
@@ -43,9 +44,11 @@ def generate_new_nickname():
 
 
 def generate_verification_code():
-    import random
     return ''.join(random.sample('0123456789', 6))
 
+def random_profile():
+    default_profiles = ['cat', 'bird', 'deer', 'crocodile', 'whale']
+    return random.choice(default_profiles)
 
 def send_verification_email(user, request):
     verification_code = generate_verification_code()
@@ -54,7 +57,7 @@ def send_verification_email(user, request):
     user.save()
 
     subject = 'Email Verification'
-    message = f'Hello from 42tsc_Pong!\nPlease enter this code to verify your email: {user.email_verification_code}'
+    message = f'Hello from Pong Beat Makers!\nPlease enter this code to verify your email: {user.email_verification_code}'
     from_email = 'elinlim22@gmail.com'
     recipient_list = [user.email]
 
