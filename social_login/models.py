@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from .utils import random_profile
 
 DEFAULT = False
 UPLOAD = True
@@ -11,6 +12,7 @@ class CreateUser(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             nickname=nickname,
+            profile=random_profile(),
         )
         user.save(using=self._db)
         return user
